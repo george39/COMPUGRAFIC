@@ -1,4 +1,5 @@
 import pygame
+import random
 ANCHO=800
 ALTO=600
 BLANCO=(255,255,255)
@@ -42,7 +43,7 @@ class jugador(pygame.sprite.Sprite):
         self.dir = 0
         self.vida = 3
     def gravedad(self):
-    	
+        
         if self.var_y==0:
             self.var_y=1
         else:
@@ -96,7 +97,67 @@ class jugador(pygame.sprite.Sprite):
 
     def no_mover(self):
         """ Usuario no pulsa teclas """
-        self.var_x = 0    
+        self.var_x = 0 
+
+class enemigo(pygame.sprite.Sprite):
+    bloques = None
+    def __init__(self, archivo):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(archivo).convert_alpha()
+        self.rect=self.image.get_rect()
+        self.rect.x=200
+        self.rect.y=200
+        self.var_x=0
+        self.var_y=0
+        self.disparar=False
+        self.vida=0
+        self.tiempo=random.randrange(20)
+    def update(self):
+        self.rect.x+=self.var_x
+        self.rect.y+=self.var_y
+        self.tiempo-=1
+        if self.tiempo==0:
+            self.disparar=True
+            self.tiempo=random.randrange(20)
+
+
+#CLASE PARA CREAR LAS BALAS
+class bala(pygame.sprite.Sprite):
+    def __init__(self, archivo):
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.image.load(archivo).convert_alpha()
+        self.rect=self.image.get_rect()
+        self.rect.x=0
+        self.rect.y=0
+
+        self.var_x=0
+        self.var_y=0
+        self.dir=""
+        #self.dir2=1
+
+
+    def update(self):
+       
+        
+        if self.dir==2:
+            self.var_x+=10
+            self.var_y=0
+
+        if self.dir==1:
+            self.var_x-=10
+            self.var_y=0    
+        '''
+        if self.dir==3:
+            self.var_y=-10
+            self.var_x=0
+                
+
+        if self.dir==0:
+            self.var_y+=10
+            self.var_x=0
+        '''
+        self.rect.x+=self.var_x
+        self.rect.y+=self.var_y
 
 
 
@@ -113,16 +174,16 @@ class bloque(pygame.sprite.Sprite):
     def update(self):
         self.rect.x+=self.var_x
         self.rect.y+=self.var_y
- 
+''' 
 def dibujar_bloques(gruposprite1,gruposprite2):
     # DIBUJA LA PRIMERA FILA DE BLOQUES
-    for i in range(4):
+    for i in range(1):
         b=Bloque('img/bloque.png')
         b.rect.x=600
         b.rect.y=700
         gruposprite1.add(b)
         gruposprite2.add(b)
-
+'''
 if __name__ == '__main__':
 
     pygame.init()
@@ -130,21 +191,45 @@ if __name__ == '__main__':
     todos=pygame.sprite.Group()
     plataformas=pygame.sprite.Group()
     asensores=pygame.sprite.Group()
+    jugadores=pygame.sprite.Group()
+    balas=pygame.sprite.Group()
+    enemigos=pygame.sprite.Group()
 
-    fondo=pygame.image.load('img/f.png')
+
+    fondo=pygame.image.load('img/im3.jpeg')
     dim_fondo=fondo.get_rect()
-    ventana=fondo.subsurface(0,2000,ANCHO,ALTO)
-	    
+    ventana=fondo.subsurface(0,500,ANCHO,ALTO)
+    ''' 
+    fondo2=pygame.image.load('img/f.png')
+    dim_fondo2=fondo2.get_rect()
+    ventana=fondo2.subsurface(0,2000,ANCHO,ALTO)
+    '''    
     animal = Recortar('img/soldier.png', 32,32) 
     jp=jugador(animal[4][6])
     todos.add(jp)
+    jugadores.add(jp)
+    
+    #DIBUJAR ENEMIGOS
+    for i in range(5):
+        en=enemigo('img/enemigo.png')
+        en.rect.x=random.randrange(ALTO,ANCHO)
+        en.rect.y=random.randrange(ALTO-50)
+        en.var_x=-5
+        if en.rect.x ==ANCHO-200 :#and en.rect.x < ANCHO:
+            en.var_x=5#(-1)*random.randrange(1,10)
+            en.var_y=5#random.randrange(3,10)
+        enemigos.add(en)
+        todos.add(en)
+    
     
     #DIBUJAR LOS BLOQUES
-    b=bloque('img/bloque.png')
-    b.rect.x=300
-    b.rect.y=500
-    plataformas.add(b)
-    todos.add(b)
+    for i in range(20):
+        b=bloque('img/bloque.png')
+        b.rect.x=random.randrange(800,ANCHO+9000)
+        b.rect.y=500
+        b.var_x=-3
+        plataformas.add(b)
+        todos.add(b)
     
     b1=bloque('img/bloque.png')
     #b1.image.fill(VERDE)
@@ -157,6 +242,7 @@ if __name__ == '__main__':
 
     var_x=0
     pos_x=0
+    
 
     reloj=pygame.time.Clock()
     while True:
@@ -165,247 +251,68 @@ if __name__ == '__main__':
                 exit()
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_RIGHT:
-                    jp.var_x=3
+                    jp.var_x=2
                     jp.var_y=0
                     jp.dir=2
+                    #b.var_x=-3
                 if event.key==pygame.K_LEFT:
-                    jp.var_x=-3
+                    jp.var_x=-2
                     jp.var_y=0
                     jp.dir=1
                 if event.key==pygame.K_UP:
                     jp.var_y=-8
                     jp.rect.y += -2
+                    
+
+                if event.key== pygame.K_SPACE:
+                    b= bala("img/kameha.png")
+                    #if jp.var_x>0:
+                    b.rect.x=jp.rect.x+10
+                    b.rect.y=jp.rect.y+10
+                    b.dir=jp.dir
+                    balas.add(b)
+                    todos.add(b)
 
             
-            if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT and jp.var_x < 0:
-                        jp.no_mover()
-                        
-                    if event.key == pygame.K_RIGHT and jp.var_x > 0:
-                        jp.no_mover() 
-
-                    
-                       
-        #ANIMACION DEL JUGADOR
-        if jp.var_x==0:
-        	jp.image=animal[0][jp.dir]
-    	else:
-    		jp.image=animal[0+jp.con][jp.dir]
-        
-        #MOVIMIENTO DEL FONDO
-		if jp.var_x >0 and pos_x < (dim_fondo.width - ANCHO):
-			pos_x+=5
-		if jp.var_x<0 :
-			pos_x-=5
-		if pos_x>0 and pos_x < (dim_fondo.width - ANCHO):
-			ventana=fondo.subsurface(pos_x,2000,ANCHO,ALTO)	
-        #pantalla.fill(BLANCO)
-        pantalla.blit(ventana,(0,0))
-        todos.update()
-        todos.draw(pantalla)
-        pygame.display.flip()
-        reloj.tick(60)
-import pygame
-ANCHO=800
-ALTO=600
-BLANCO=(255,255,255)
-NEGRO=(0,0,0)
-VERDE=(0,255,0)
-
-
-def Recortar(archivo,anc,alc):
-    matriz = []
-    imagen = pygame.image.load(archivo).convert_alpha()
-    i_ancho, i_alto =imagen.get_size()
-    for x in range(i_ancho/anc):
-        linea = []
-        for y in range(i_alto/alc):
-            cuadro = (x*anc,y*alc,anc,alc)
-            linea.append(imagen.subsurface(cuadro))
-        matriz.append(linea)
-    return matriz
-
-
-
-class jugador(pygame.sprite.Sprite):
-    lp=None
-    la=None
-    def __init__(self, img_sprite):
-        pygame.sprite.Sprite.__init__(self)
-        '''
-        self.image=pygame.Surface([30,50])
-        self.image.fill(VERDE)
-        self.rect=self.image.get_rect()
-        self.var_x=0
-        self.var_y=0
-        '''
-        self.image = img_sprite
-        self.rect = self.image.get_rect()
-        self.rect.x = 100
-        self.rect.y = 100
-        self.var_x = 0
-        self.var_y = 0
-        self.con = 0
-        self.dir = 0
-        self.vida = 3
-    def gravedad(self):
-    	
-        if self.var_y==0:
-            self.var_y=1
-        else:
-            self.var_y+=0.35
-
-        if self.rect.y >= ALTO-self.rect.height:
-            self.rect.bottom=ALTO
-            self.var_y=0
-
-    def update(self):
-        self.rect.x += self.var_x
-        self.rect.y += self.var_y
-        if self.con < 4:
-            self.con += 1
-        else:
-            self.con = 0
-
-        self.gravedad()
-        self.rect.x+=self.var_x
-        
-        l_col=pygame.sprite.spritecollide(self,self.lp,False)
-        for pl in l_col:
-            if self.var_x>0:
-                self.rect.right=ANCHO#pl.rect.left
-            else:
-                self.rect.left=pl.rect.right
-        
-        
                
-        self.rect.y+=self.var_y
-        l_col=pygame.sprite.spritecollide(self,self.lp,False)
-        for pl in l_col:
-            if self.var_y>0:
-                self.rect.bottom=pl.rect.top
-                if pl.var_y!=0:
-                    self.rect.y+=pl.var_y
-            else:
-                self.rect.top=pl.rect.bottom
-                if pl.var_y!=0:
-                    self.rect.y-=pl.var_y
-            self.var_y=0
-
-        #CHOQUES CON LOS BORDES
-        if self.rect.right>ANCHO:
-            self.rect.right=ANCHO
-
-
-        if self.rect.left<0:
-            self.rect.left=0
-            #self.var_x=0        
-
-    def no_mover(self):
-        """ Usuario no pulsa teclas """
-        self.var_x = 0    
-
-
-
-class bloque(pygame.sprite.Sprite):
-    def __init__(self, archivo):
-        pygame.sprite.Sprite.__init__(self)
-        self.image=pygame.image.load(archivo).convert_alpha()
-        self.rect=self.image.get_rect()
-        self.rect.x=100
-        self.rect.y=100
-        self.var_x=0
-        self.var_y=0
-         
-    def update(self):
-        self.rect.x+=self.var_x
-        self.rect.y+=self.var_y
- 
-def dibujar_bloques(gruposprite1,gruposprite2):
-    # DIBUJA LA PRIMERA FILA DE BLOQUES
-    for i in range(4):
-        b=Bloque('img/bloque.png')
-        b.rect.x=600
-        b.rect.y=700
-        gruposprite1.add(b)
-        gruposprite2.add(b)
-
-if __name__ == '__main__':
-
-    pygame.init()
-    pantalla=pygame.display.set_mode([ANCHO,ALTO])
-    todos=pygame.sprite.Group()
-    plataformas=pygame.sprite.Group()
-    asensores=pygame.sprite.Group()
-
-    fondo=pygame.image.load('img/f.png')
-    dim_fondo=fondo.get_rect()
-    ventana=fondo.subsurface(0,2000,ANCHO,ALTO)
-	    
-    animal = Recortar('img/soldier.png', 32,32) 
-    jp=jugador(animal[4][6])
-    todos.add(jp)
-    
-    #DIBUJAR LOS BLOQUES
-    b=bloque('img/bloque.png')
-    b.rect.x=300
-    b.rect.y=500
-    plataformas.add(b)
-    todos.add(b)
-    
-    b1=bloque('img/bloque.png')
-    #b1.image.fill(VERDE)
-    b1.var_y=3
-    plataformas.add(b1)
-    todos.add(b1)
-
-    jp.lp=plataformas
-    jp.la=asensores
-
-    var_x=0
-    pos_x=0
-
-    reloj=pygame.time.Clock()
-    while True:
-        for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                exit()
-            if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_RIGHT:
-                    jp.var_x=3
-                    jp.var_y=0
-                    jp.dir=2
-                if event.key==pygame.K_LEFT:
-                    jp.var_x=-3
-                    jp.var_y=0
-                    jp.dir=1
-                if event.key==pygame.K_UP:
-                    jp.var_y=-8
-                    jp.rect.y += -2
-
-            
             if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT and jp.var_x < 0:
-                        jp.no_mover()
-                        
-                    if event.key == pygame.K_RIGHT and jp.var_x > 0:
-                        jp.no_mover() 
+                if event.key==pygame.K_SPACE:
+                    #balas.remove(b)
+                    todos.remove(b)
+                
+                if event.key == pygame.K_LEFT and jp.var_x < 0:
+                    jp.no_mover()
 
+                if event.key == pygame.K_RIGHT and jp.var_x > 0:
+                        jp.no_mover()    
+                
+                
                     
-                       
+        for bl in balas:
+            ls_impacto=pygame.sprite.spritecollide(bl,enemigos,False)
+            for im in ls_impacto:
+                balas.remove(bl)
+                todos.remove(bl)
+
         #ANIMACION DEL JUGADOR
         if jp.var_x==0:
-        	jp.image=animal[0][jp.dir]
-    	else:
-    		jp.image=animal[0+jp.con][jp.dir]
+            jp.image=animal[0][jp.dir]
+        else:
+            jp.image=animal[0+jp.con][jp.dir]
         
         #MOVIMIENTO DEL FONDO
-		if jp.var_x >0 and pos_x < (dim_fondo.width - ANCHO):
-			pos_x+=5
-		if jp.var_x<0 :
-			pos_x-=5
-		if pos_x>0 and pos_x < (dim_fondo.width - ANCHO):
-			ventana=fondo.subsurface(pos_x,2000,ANCHO,ALTO)	
+        if jp.var_x >0 and pos_x < (dim_fondo.width - ANCHO):
+            pos_x+=2
+        if jp.var_x<0 :
+            pos_x-=2
+        if pos_x>0 and pos_x < (dim_fondo.width - ANCHO):
+            ventana=fondo.subsurface(pos_x,500,ANCHO,ALTO)
+
+        
+        
+        
+
+                    
         #pantalla.fill(BLANCO)
         pantalla.blit(ventana,(0,0))
         todos.update()
