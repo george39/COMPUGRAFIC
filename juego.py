@@ -87,12 +87,12 @@ class jugador(pygame.sprite.Sprite):
             self.var_y=0
 
         #CHOQUES CON LOS BORDES
-        if self.rect.right>ANCHO:
-            self.rect.right=ANCHO
+        if self.rect.right>100:
+            self.rect.right=100
 
 
-        if self.rect.left<0:
-            self.rect.left=0
+        if self.rect.left<100:
+            self.rect.left=100
             #self.var_x=0        
 
     def no_mover(self):
@@ -105,8 +105,8 @@ class enemigo(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(archivo).convert_alpha()
         self.rect=self.image.get_rect()
-        self.rect.x=200
-        self.rect.y=200
+        self.rect.x=ANCHO
+        self.rect.y=ALTO
         self.var_x=0
         self.var_y=0
         self.disparar=False
@@ -195,6 +195,8 @@ if __name__ == '__main__':
     balas=pygame.sprite.Group()
     enemigos=pygame.sprite.Group()
 
+    ebalas=pygame.sprite.Group()
+
 
     fondo=pygame.image.load('img/im3.jpeg')
     dim_fondo=fondo.get_rect()
@@ -210,14 +212,13 @@ if __name__ == '__main__':
     jugadores.add(jp)
     
     #DIBUJAR ENEMIGOS
-    for i in range(5):
+    for i in range(30):
         en=enemigo('img/enemigo.png')
-        en.rect.x=random.randrange(ALTO,ANCHO)
-        en.rect.y=random.randrange(ALTO-50)
+        en.rect.x=random.randrange(ANCHO,11000)
+        en.rect.y=ALTO-60#random.randrange(ALTO-200)
         en.var_x=-5
-        if en.rect.x ==ANCHO-200 :#and en.rect.x < ANCHO:
-            en.var_x=5#(-1)*random.randrange(1,10)
-            en.var_y=5#random.randrange(3,10)
+        
+            
         enemigos.add(en)
         todos.add(en)
     
@@ -242,7 +243,7 @@ if __name__ == '__main__':
 
     var_x=0
     pos_x=0
-    
+    conenemi=50
 
     reloj=pygame.time.Clock()
     while True:
@@ -276,6 +277,7 @@ if __name__ == '__main__':
             
                
             if event.type == pygame.KEYUP:
+
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
                     todos.remove(b)
@@ -286,13 +288,38 @@ if __name__ == '__main__':
                 if event.key == pygame.K_RIGHT and jp.var_x > 0:
                         jp.no_mover()    
                 
-                
+        if conenemi==0:
+            en1=enemigo('img/enemigo.png')
+            en1.rect.x=random.randrange(ANCHO-500)
+            #en1.rect.y=random.randrange(ANCHO-500)
+            #en1.var_x=random.randrange(1,10)
+            #en1.var_y=random.randrange(3,10)
+            enemigos.add(en1)
+            todos.add(en1)
+            conenemi=50
+        else:
+            conenemi-=1        
                     
         for bl in balas:
             ls_impacto=pygame.sprite.spritecollide(bl,enemigos,False)
             for im in ls_impacto:
                 balas.remove(bl)
                 todos.remove(bl)
+                if im.vida==0:
+                    enemigos.remove(im)
+                    todos.remove(im)
+
+        for ju in enemigos:
+            ls_impacto=pygame.sprite.spritecollide(ju,jugadores,False)
+            for im in ls_impacto:
+                #balas.remove(bl)
+                #todos.remove(bl)
+                print jp.vida
+                im.vida-=1
+                if im.vida==0:
+                    jugadores.remove(im)
+                    todos.remove(im)            
+
 
         #ANIMACION DEL JUGADOR
         if jp.var_x==0:
