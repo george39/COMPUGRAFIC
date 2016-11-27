@@ -54,6 +54,7 @@ class jugador(pygame.sprite.Sprite):
             self.var_y=0
 
     def update(self):
+        self.vida
         self.rect.x += self.var_x
         self.rect.y += self.var_y
         if self.con < 4:
@@ -251,6 +252,7 @@ if __name__ == '__main__':
     var_x=0
     pos_x=0
     conenemi=50
+    perder =0
 
     reloj=pygame.time.Clock()
     seleccionar="play"
@@ -336,18 +338,34 @@ if __name__ == '__main__':
                 if im.vida==0:
                     enemigos.remove(im)
                     todos.remove(im)
-
+        
+        #ELIMINAR AL JUGADOR 
+        ls_choque=pygame.sprite.spritecollide(jp,enemigos, True)
+        for elemento in ls_choque:
+            jp.vida-=1
+            print jp.vida
+            if jp.vida==0:
+                jugadores.remove(jp)
+                todos.remove(jp)
+                            
+        '''
         for ju in enemigos:
-            ls_impacto=pygame.sprite.spritecollide(ju,jugadores,False)
-            for im in ls_impacto:
-                #balas.remove(bl)
-                #todos.remove(bl)
+            ls_impacto2=pygame.sprite.spritecollide(ju,jugadores,False)
+            for im in ls_impacto2:
+                im.vida
+                perder-=1
+                print perder
+                
+                if jp.vida == 0:
+                    jugadores.remove(im)
+                    todos.remove(im)
+                
                 print jp.vida
                 im.vida-=1
                 if im.vida==0:
                     jugadores.remove(im)
                     todos.remove(im)            
-
+                '''
 
         #ANIMACION DEL JUGADOR
         if jp.var_x==0:
@@ -364,17 +382,25 @@ if __name__ == '__main__':
             ventana=fondo.subsurface(pos_x,500,ANCHO,ALTO)
 
         
+        if jp.vida <1:
+                pantalla.fill(NEGRO)
+                texto=fuente.render("GAME OVER", True, BLANCO)
+                pantalla.blit(texto,(100,100))
+                imagen=pygame.image.load('img/kameha.png')
+                pantalla.blit(imagen,[120,150])
+                pygame.display.flip()
         
         
     
         
-        if pag ==1:   
+        if pag ==1 and jp.vida!=0:   
             #pantalla.fill(BLANCO)
             pantalla.blit(ventana,(0,0))
             todos.update()
             todos.draw(pantalla)
             pygame.display.flip()
             reloj.tick(60)
+            
         
 
         
