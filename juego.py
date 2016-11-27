@@ -188,6 +188,13 @@ if __name__ == '__main__':
 
     pygame.init()
     pantalla=pygame.display.set_mode([ANCHO,ALTO])
+
+    fuente=pygame.font.SysFont("Arial",36)
+    '''
+    texto=fuente.render("Ejemplo de letrero", True, BLANCO)
+    pantalla.blit(texto,(100,100))
+    pygame.display.flip()
+    ''' 
     todos=pygame.sprite.Group()
     plataformas=pygame.sprite.Group()
     asensores=pygame.sprite.Group()
@@ -246,10 +253,31 @@ if __name__ == '__main__':
     conenemi=50
 
     reloj=pygame.time.Clock()
-    while True:
+    seleccionar="play"
+    pag=0
+    terminar=False
+    while not terminar:
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
-                exit()
+                terminar=True
+                #exit()
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                pag+=1
+                
+            if pag==0:
+                pantalla.fill(NEGRO)
+                texto=fuente.render("INICIO", True, BLANCO)
+                pantalla.blit(texto,(100,100))
+                imagen=pygame.image.load('img/kameha.png')
+                pantalla.blit(imagen,[120,150])
+                pygame.display.flip()
+                
+            
+            
+                
+            
+
+            
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_RIGHT:
                     jp.var_x=2
@@ -338,11 +366,15 @@ if __name__ == '__main__':
         
         
         
+    
+        
+        if pag ==1:   
+            #pantalla.fill(BLANCO)
+            pantalla.blit(ventana,(0,0))
+            todos.update()
+            todos.draw(pantalla)
+            pygame.display.flip()
+            reloj.tick(60)
+        
 
-                    
-        #pantalla.fill(BLANCO)
-        pantalla.blit(ventana,(0,0))
-        todos.update()
-        todos.draw(pantalla)
-        pygame.display.flip()
-        reloj.tick(60)
+        
