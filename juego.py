@@ -49,10 +49,20 @@ class jugador(pygame.sprite.Sprite):
         else:
             self.var_y+=0.35
 
-        if self.rect.y >= ALTO-self.rect.height:
+        
+        
+        # Detener movimiento vertical
+           
+        '''
+        if self.rect.y >= ALTO - self.rect.height and self.var_y >= 0:
+            self.var_y = 0
+            self.rect.y = ALTO - self.rect.height    
+        '''
+        if self.rect.y >= ALTO-self.rect.height and self.var_y >=0:
             self.rect.bottom=ALTO
             self.var_y=0
-
+          
+     
     def update(self):
         self.vida
         self.rect.x += self.var_x
@@ -253,6 +263,7 @@ if __name__ == '__main__':
     pos_x=0
     conenemi=50
     perder =0
+    enemimuerots = 0
 
     reloj=pygame.time.Clock()
     seleccionar="play"
@@ -307,7 +318,7 @@ if __name__ == '__main__':
             
                
             if event.type == pygame.KEYUP:
-
+                 
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
                     todos.remove(b)
@@ -318,30 +329,29 @@ if __name__ == '__main__':
                 if event.key == pygame.K_RIGHT and jp.var_x > 0:
                         jp.no_mover()    
                 
-        if conenemi==0:
-            en1=enemigo('img/enemigo.png')
-            en1.rect.x=random.randrange(ANCHO-500)
-            #en1.rect.y=random.randrange(ANCHO-500)
-            #en1.var_x=random.randrange(1,10)
-            #en1.var_y=random.randrange(3,10)
-            enemigos.add(en1)
-            todos.add(en1)
-            conenemi=50
-        else:
-            conenemi-=1        
-                    
+                
+        #ELIMINAR AL ENEMIGO
+
+            
+            
+                   
         for bl in balas:
-            ls_impacto=pygame.sprite.spritecollide(bl,enemigos,False)
+            ls_impacto=pygame.sprite.spritecollide(bl,enemigos,True)
             for im in ls_impacto:
+                enemimuerots+=1
+                print enemimuerots
                 balas.remove(bl)
                 todos.remove(bl)
+                
                 if im.vida==0:
                     enemigos.remove(im)
                     todos.remove(im)
+                   
         
         #ELIMINAR AL JUGADOR 
         ls_choque=pygame.sprite.spritecollide(jp,enemigos, True)
         for elemento in ls_choque:
+        
             jp.vida-=1
             print jp.vida
             if jp.vida==0:
