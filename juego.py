@@ -243,13 +243,13 @@ if __name__ == '__main__':
     
     #DIBUJAR LOS BLOQUES
     for i in range(20):
-        b=bloque('img/bloque.png')
-        b.rect.x=random.randrange(800,ANCHO+9000)
-        b.rect.y=500
-        b.var_x=-3
-        plataformas.add(b)
-        todos.add(b)
-    
+        blo=bloque('img/bloque.png')
+        blo.rect.x=random.randrange(800,ANCHO+9000)
+        blo.rect.y=500
+        blo.var_x=-3
+        plataformas.add(blo)
+        todos.add(blo)
+    '''
     b1=bloque('img/bloque.png')
     #b1.image.fill(VERDE)
     b1.var_y=3
@@ -264,7 +264,7 @@ if __name__ == '__main__':
     conenemi=50
     perder =0
     enemimuerots = 0
-
+    '''
     reloj=pygame.time.Clock()
     seleccionar="play"
     pag=0
@@ -357,7 +357,11 @@ if __name__ == '__main__':
             if jp.vida==0:
                 jugadores.remove(jp)
                 todos.remove(jp)
-                            
+        
+        ls_choque=pygame.sprite.spritecollide(blo,jugadores, True)
+        for elemento in ls_choque:
+            print "vida"  
+
         '''
         for ju in enemigos:
             ls_impacto2=pygame.sprite.spritecollide(ju,jugadores,False)
