@@ -20,6 +20,26 @@ def Recortar(archivo,anc,alc):
     return matriz
 
 
+class Jugador2(pygame.sprite.Sprite):
+    def __init__(self, archivo):
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.image.load(archivo).convert_alpha()
+        self.rect=self.image.get_rect()
+        self.rect.x=100
+        self.rect.y=550
+        self.var_x=0
+        self.var_y=0
+        self.vida=3
+        self.con=0
+        self.dir=0
+    def update(self):
+        self.rect.x+=self.var_x
+        self.rect.y+=self.var_y
+
+    def no_mover(self):
+        """ Usuario no pulsa teclas """
+        self.var_x = 0    
+
 
 class jugador(pygame.sprite.Sprite):
     lp=None
@@ -212,6 +232,7 @@ if __name__ == '__main__':
     jugadores=pygame.sprite.Group()
     balas=pygame.sprite.Group()
     enemigos=pygame.sprite.Group()
+    jugadoresvida=pygame.sprite.Group()
 
     ebalas=pygame.sprite.Group()
 
@@ -223,12 +244,18 @@ if __name__ == '__main__':
     fondo2=pygame.image.load('img/f.png')
     dim_fondo2=fondo2.get_rect()
     ventana=fondo2.subsurface(0,2000,ANCHO,ALTO)
-    '''    
+    '''
+    #JUGADOR    
     animal = Recortar('img/soldier.png', 32,32) 
     jp=jugador(animal[4][6])
     todos.add(jp)
     jugadores.add(jp)
+     
+    #JUGADOR CON VIDA
     
+    
+    #todos.add(jp2)
+    #jugadores.add(jp2)
     #DIBUJAR ENEMIGOS
     for i in range(30):
         en=enemigo('img/enemigo.png')
@@ -255,7 +282,7 @@ if __name__ == '__main__':
     b1.var_y=3
     plataformas.add(b1)
     todos.add(b1)
-
+    '''
     jp.lp=plataformas
     jp.la=asensores
 
@@ -264,7 +291,7 @@ if __name__ == '__main__':
     conenemi=50
     perder =0
     enemimuerots = 0
-    '''
+
     reloj=pygame.time.Clock()
     seleccionar="play"
     pag=0
@@ -318,7 +345,7 @@ if __name__ == '__main__':
             
                
             if event.type == pygame.KEYUP:
-                 
+
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
                     todos.remove(b)
@@ -339,7 +366,7 @@ if __name__ == '__main__':
             ls_impacto=pygame.sprite.spritecollide(bl,enemigos,True)
             for im in ls_impacto:
                 enemimuerots+=1
-                print enemimuerots
+                print "choque"
                 balas.remove(bl)
                 todos.remove(bl)
                 
@@ -357,11 +384,13 @@ if __name__ == '__main__':
             if jp.vida==0:
                 jugadores.remove(jp)
                 todos.remove(jp)
-        
-        ls_choque=pygame.sprite.spritecollide(blo,jugadores, True)
-        for elemento in ls_choque:
-            print "vida"  
 
+
+        #CHOCAR Y COJER UNA VIDA EL JUGADOR
+        if jp.rect.top==blo.rect.bottom:
+            jp.vida+=1
+            print jp.vida           
+                            
         '''
         for ju in enemigos:
             ls_impacto2=pygame.sprite.spritecollide(ju,jugadores,False)
@@ -405,7 +434,18 @@ if __name__ == '__main__':
                 pygame.display.flip()
         
         
-    
+        if jp.vida==4:
+            
+            jp2=Jugador2("img/simpson2.PNG")
+            jugadores.remove(jp)
+            todos.remove(jp)
+            jp2.rect.x=90
+            jp2.rect.y=540#random.randrange(ALTO-200)
+            jp.var_y=0
+            
+            todos.add(jp2)
+            jugadores.add(jp2)
+            
         
         if pag ==1 and jp.vida!=0:   
             #pantalla.fill(BLANCO)
@@ -415,6 +455,6 @@ if __name__ == '__main__':
             pygame.display.flip()
             reloj.tick(60)
             
-        
+            
 
         
