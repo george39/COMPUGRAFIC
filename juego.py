@@ -61,7 +61,7 @@ class jugador(pygame.sprite.Sprite):
         self.var_y = 0
         self.con = 0
         self.dir = 0
-        self.vida = 3
+        self.vida = 1
     def gravedad(self):
         
         if self.var_y==0:
@@ -78,8 +78,8 @@ class jugador(pygame.sprite.Sprite):
             self.var_y = 0
             self.rect.y = ALTO - self.rect.height    
         '''
-        if self.rect.y >= ALTO-self.rect.height and self.var_y >=0:
-            self.rect.bottom=ALTO
+        if self.rect.y >= ALTO-18-self.rect.height and self.var_y >=0:
+            self.rect.bottom=ALTO-18
             self.var_y=0
           
      
@@ -252,9 +252,9 @@ if __name__ == '__main__':
     hongos= pygame.sprite.Group()
 
 
-    fondo=pygame.image.load('img/im3.jpeg')
+    fondo=pygame.image.load('img/fond.png')
     dim_fondo=fondo.get_rect()
-    ventana=fondo.subsurface(0,500,ANCHO,ALTO)
+    ventana=fondo.subsurface(0,2248,ANCHO,ALTO)
     ''' 
     fondo2=pygame.image.load('img/f.png')
     dim_fondo2=fondo2.get_rect()
@@ -269,7 +269,7 @@ if __name__ == '__main__':
     #JUGADOR CON VIDA
     jp2=Jugador2("img/soldier2.png")
     jp2.rect.x=100
-    jp2.rect.y=520
+    jp2.rect.y=508
 
     
     #todos.add(jp2)
@@ -278,7 +278,7 @@ if __name__ == '__main__':
     for i in range(30):
         en=enemigo('img/enemigo.png')
         en.rect.x=random.randrange(ANCHO,11000)
-        en.rect.y=ALTO-60#random.randrange(ALTO-200)
+        en.rect.y=ALTO-90#random.randrange(ALTO-200)
         en.var_x=-5
         
             
@@ -392,7 +392,7 @@ if __name__ == '__main__':
             ls_impacto=pygame.sprite.spritecollide(bl,enemigos,True)
             for im in ls_impacto:
                 enemimuerots+=1
-                print "choque"
+                print "choque", enemimuerots
                 balas.remove(bl)
                 todos.remove(bl)
                 
@@ -416,11 +416,11 @@ if __name__ == '__main__':
         ls_choque=pygame.sprite.spritecollide(jp,hongos, True)
         for elemento in ls_choque:
             jp.vida+=1
-            if jp.vida==4:
+            if jp.vida==2:
                 jugadores.remove(jp)
                 todos.remove(jp)
                 jp2.rect.x=100
-                jp2.rect.y=520
+                jp2.rect.y=508
                 jugadores.add(jp2)
                 todos.add(jp2)
             #jugadores.add(jp2)
@@ -431,9 +431,10 @@ if __name__ == '__main__':
         for elemento in ls_choque:
             jp2.vida-=1
             jp.vida-=1
+
             print jp.vida
             print "vida menos jp2",jp2.vida
-            if  jp2.vida==0 and jp.vida ==3:
+            if  jp2.vida==0 and jp.vida ==1:
                 jugadores.remove(jp2)
                 todos.remove(jp2)
                 jugadores.add(jp)
@@ -474,7 +475,7 @@ if __name__ == '__main__':
         if jp.var_x<0 :
             pos_x-=2
         if pos_x>0 and pos_x < (dim_fondo.width - ANCHO):
-            ventana=fondo.subsurface(pos_x,500,ANCHO,ALTO)
+            ventana=fondo.subsurface(pos_x,2248,ANCHO,ALTO)
 
         
         if jp.vida <1:
