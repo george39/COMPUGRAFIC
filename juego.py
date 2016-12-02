@@ -29,7 +29,7 @@ class Jugador2(pygame.sprite.Sprite):
         self.rect.y=550
         self.var_x=0
         self.var_y=0
-        self.vida=3
+        self.vida=1
         self.con=0
         self.dir=0
     def update(self):
@@ -191,6 +191,20 @@ class bala(pygame.sprite.Sprite):
         self.rect.y+=self.var_y
 
 
+class Hongos(pygame.sprite.Sprite):
+    def __init__(self, archivo):
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.image.load(archivo).convert_alpha()
+        self.rect=self.image.get_rect()
+        self.rect.x=100
+        self.rect.y=100
+        self.var_x=0
+        self.var_y=0
+         
+    def update(self):
+        self.rect.x+=self.var_x
+        self.rect.y+=self.var_y
+
 
 class bloque(pygame.sprite.Sprite):
     def __init__(self, archivo):
@@ -235,6 +249,7 @@ if __name__ == '__main__':
     jugadoresvida=pygame.sprite.Group()
 
     ebalas=pygame.sprite.Group()
+    hongos= pygame.sprite.Group()
 
 
     fondo=pygame.image.load('img/im3.jpeg')
@@ -247,12 +262,15 @@ if __name__ == '__main__':
     '''
     #JUGADOR    
     animal = Recortar('img/soldier.png', 32,32) 
-    jp=jugador(animal[4][6])
+    jp=jugador(animal[4][7])
     todos.add(jp)
     jugadores.add(jp)
      
     #JUGADOR CON VIDA
-    
+    jp2=Jugador2("img/soldier2.png")
+    jp2.rect.x=100
+    jp2.rect.y=520
+
     
     #todos.add(jp2)
     #jugadores.add(jp2)
@@ -276,6 +294,14 @@ if __name__ == '__main__':
         blo.var_x=-3
         plataformas.add(blo)
         todos.add(blo)
+    
+    for i in range(1):
+        hongo=Hongos('img/hongo.png')
+        hongo.rect.x=random.randrange(800,ANCHO+2000)
+        hongo.rect.y=450
+        hongo.var_x=-3
+        hongos.add(hongo)
+        todos.add(hongo)
     '''
     b1=bloque('img/bloque.png')
     #b1.image.fill(VERDE)
@@ -384,12 +410,38 @@ if __name__ == '__main__':
             if jp.vida==0:
                 jugadores.remove(jp)
                 todos.remove(jp)
-
+        
 
         #CHOCAR Y COJER UNA VIDA EL JUGADOR
-        if jp.rect.top==blo.rect.bottom:
+        ls_choque=pygame.sprite.spritecollide(jp,hongos, True)
+        for elemento in ls_choque:
             jp.vida+=1
-            print jp.vida           
+            if jp.vida==4:
+                jugadores.remove(jp)
+                todos.remove(jp)
+                jp2.rect.x=100
+                jp2.rect.y=520
+                jugadores.add(jp2)
+                todos.add(jp2)
+            #jugadores.add(jp2)
+            #todos.add(jp2)
+            print jp.vida
+        
+        ls_choque=pygame.sprite.spritecollide(jp2,enemigos, True)
+        for elemento in ls_choque:
+            jp2.vida-=1
+            jp.vida-=1
+            print jp.vida
+            print "vida menos jp2",jp2.vida
+            if  jp2.vida==0 and jp.vida ==3:
+                jugadores.remove(jp2)
+                todos.remove(jp2)
+                jugadores.add(jp)
+                todos.add(jp)
+                 
+
+        
+                    
                             
         '''
         for ju in enemigos:
@@ -433,19 +485,18 @@ if __name__ == '__main__':
                 pantalla.blit(imagen,[120,150])
                 pygame.display.flip()
         
-        
+        '''
         if jp.vida==4:
             
-            jp2=Jugador2("img/simpson2.PNG")
+            jp2=Jugador2("img/soldier2.png")
             jugadores.remove(jp)
             todos.remove(jp)
-            jp2.rect.x=90
-            jp2.rect.y=540#random.randrange(ALTO-200)
-            jp.var_y=0
-            
-            todos.add(jp2)
+            jp2.rect.x=100
+            jp2.rect.y=520
             jugadores.add(jp2)
-            
+            todos.add(jp2)
+
+        '''    
         
         if pag ==1 and jp.vida!=0:   
             #pantalla.fill(BLANCO)
