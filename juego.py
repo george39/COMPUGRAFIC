@@ -130,6 +130,51 @@ class jugador(pygame.sprite.Sprite):
         """ Usuario no pulsa teclas """
         self.var_x = 0 
 
+
+# CLASE JUGADOR SEGUNDO NIVEL
+class Jugador_segundo_nivel(pygame.sprite.Sprite):
+    bloques = None
+    enemigos = None
+    def __init__(self, img_sprite):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img_sprite
+        self.rect = self.image.get_rect()
+        self.rect.x = 500
+        self.rect.y = 320
+        self.var_x = 0
+        self.var_y = 0
+        self.con = 0
+        self.dir = 0
+    def update(self):
+        self.rect.x += self.var_x
+        self.rect.y += self.var_y
+        if self.con < 2:
+            self.con += 1
+        else:
+            self.con = 0
+        ls_choque = pygame.sprite.spritecollide(self,self.bloques,False)
+        for b in ls_choque:
+                if self.var_x > 0:
+                    self.rect.right = b.rect.left
+                if self.var_x < 0:
+                    self.rect.left = b.rect.right
+                if self.var_y>0:
+                    self.rect.bottom=b.rect.top
+                if self.var_y<0:
+                    self.rect.top=b.rect.bottom
+ 
+        ls_choque1 = pygame.sprite.spritecollide(self,self.enemigos,False)
+        for b in ls_choque1:
+                if self.var_x > 0:
+                    self.rect.right = b.rect.left
+                if self.var_x < 0:
+                    self.rect.left = b.rect.right
+                if self.var_y>0:
+                    self.rect.bottom=b.rect.top
+                if self.var_y<0:
+                    self.rect.top=b.rect.bottom
+
+
 class enemigo(pygame.sprite.Sprite):
     bloques = None
     def __init__(self, archivo):
@@ -293,9 +338,9 @@ if __name__ == '__main__':
     #DIBUJAR LOS BLOQUES
     for i in range(20):
         blo=bloque('img/bloque.png')
-        blo.rect.x=random.randrange(800,ANCHO+9000)
+        blo.rect.x=random.randrange(-2000,0)
         blo.rect.y=500
-        blo.var_x=-3
+        blo.var_x=3
         plataformas.add(blo)
         todos.add(blo)
     
@@ -316,11 +361,31 @@ if __name__ == '__main__':
     jp.lp=plataformas
     jp.la=asensores
     #********************************************************************
+    #********************************************************************
+
+
     #SEGUNDO NIVEL
     #********************************************************************
+    todos2=pygame.sprite.Group()
+    #plataformas=pygame.sprite.Group()
+    #asensores=pygame.sprite.Group()
+    jugadores2=pygame.sprite.Group()
+    balas2=pygame.sprite.Group()
+    enemigos2=pygame.sprite.Group()
+    #jugadoresvida=pygame.sprite.Group()
+
+    ebalas=pygame.sprite.Group()
+    hongos= pygame.sprite.Group() 
+
     fondo2=pygame.image.load('img/im3.jpeg')
     dim_fondo2=fondo2.get_rect()
     ventana2=fondo2.subsurface(3488,ALTO,ANCHO,ALTO)
+
+    #JUGADOR SEGUNDO NIVEL
+    animal2 = Recortar('img/soldier.png', 32,32) 
+    j2=Jugador_segundo_nivel(animal[4][7])
+    todos2.add(j2)
+    jugadores2.add(j2)
       
     #********************************************************************
     var_x=0
@@ -331,10 +396,12 @@ if __name__ == '__main__':
     nivel =0
     enemimuerots = 10
 
-    crear = True
-    termin=False
-    derrota=False
-    victoria=False
+    arriba = False
+    abajo = False
+    izquierda = False
+    derecha = False
+
+    
 
     reloj=pygame.time.Clock()
     seleccionar="play"
@@ -367,6 +434,14 @@ if __name__ == '__main__':
                     jp.var_x=2
                     jp.var_y=0
                     jp.dir=2
+
+                    j2.var_x=2
+                    j2.var_y=0
+                    j2.dir=2
+                    abajo=False
+                    arriba=False
+                    izquierda=False
+                    derecha=True
                     #b.var_x=-3
                 if event.key==pygame.K_LEFT:
                     jp.var_x=-2
@@ -488,6 +563,15 @@ if __name__ == '__main__':
             jp.image=animal[0][jp.dir]
         else:
             jp.image=animal[0+jp.con][jp.dir]
+        
+       
+        #ATAJO
+        if jp.rect.top==blo.rect.bottom:
+            pos_x=(dim_fondo.width-ANCHO)
+            ventana=fondo.subsurface(pos_x,2248,ANCHO,ALTO)
+            
+        
+                
         
         #MOVIMIENTO DEL FONDO
         if jp.var_x >0 and pos_x < (dim_fondo.width - ANCHO):
