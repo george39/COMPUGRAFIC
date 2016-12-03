@@ -234,12 +234,16 @@ if __name__ == '__main__':
     pygame.init()
     pantalla=pygame.display.set_mode([ANCHO,ALTO])
 
+
     fuente=pygame.font.SysFont("Arial",36)
     '''
     texto=fuente.render("Ejemplo de letrero", True, BLANCO)
     pantalla.blit(texto,(100,100))
     pygame.display.flip()
-    ''' 
+    '''
+    #PRIMER NIVEL
+    #************************************************************************
+    #************************************************************************ 
     todos=pygame.sprite.Group()
     plataformas=pygame.sprite.Group()
     asensores=pygame.sprite.Group()
@@ -275,7 +279,7 @@ if __name__ == '__main__':
     #todos.add(jp2)
     #jugadores.add(jp2)
     #DIBUJAR ENEMIGOS
-    for i in range(30):
+    for i in range(10):
         en=enemigo('img/enemigo.png')
         en.rect.x=random.randrange(ANCHO,11000)
         en.rect.y=ALTO-90#random.randrange(ALTO-200)
@@ -311,12 +315,26 @@ if __name__ == '__main__':
     '''
     jp.lp=plataformas
     jp.la=asensores
-
+    #********************************************************************
+    #SEGUNDO NIVEL
+    #********************************************************************
+    fondo2=pygame.image.load('img/im3.jpeg')
+    dim_fondo2=fondo2.get_rect()
+    ventana2=fondo2.subsurface(3488,ALTO,ANCHO,ALTO)
+      
+    #********************************************************************
     var_x=0
     pos_x=0
+    var_y=0
+    pos_y=0
     conenemi=50
-    perder =0
-    enemimuerots = 0
+    nivel =0
+    enemimuerots = 10
+
+    crear = True
+    termin=False
+    derrota=False
+    victoria=False
 
     reloj=pygame.time.Clock()
     seleccionar="play"
@@ -391,7 +409,7 @@ if __name__ == '__main__':
         for bl in balas:
             ls_impacto=pygame.sprite.spritecollide(bl,enemigos,True)
             for im in ls_impacto:
-                enemimuerots+=1
+                enemimuerots-=1
                 print "choque", enemimuerots
                 balas.remove(bl)
                 todos.remove(bl)
@@ -399,6 +417,8 @@ if __name__ == '__main__':
                 if im.vida==0:
                     enemigos.remove(im)
                     todos.remove(im)
+
+                   
                    
         
         #ELIMINAR AL JUGADOR 
@@ -476,7 +496,21 @@ if __name__ == '__main__':
             pos_x-=2
         if pos_x>0 and pos_x < (dim_fondo.width - ANCHO):
             ventana=fondo.subsurface(pos_x,2248,ANCHO,ALTO)
+        #movimiento fondo dos
+        if jp.var_x >0 and pos_y < (dim_fondo2.height - ALTO):
+            pos_y+=2
+        if jp.var_x<0 :
+            pos_y-=2
+        if pos_y>0 and pos_y < (dim_fondo2.height - ALTO):
+            ventana2=fondo2.subsurface(3488,pos_y,ANCHO,ALTO)    
 
+        #LLAMAR SEGUNDO NIVEL
+
+        if pos_x>0 and pos_x==(dim_fondo.width-ANCHO):
+            jp.var_y-=1
+            nivel+=1
+            todos.remove(en)
+            jugadores.remove(en)
         
         if jp.vida <1:
                 pantalla.fill(NEGRO)
@@ -497,16 +531,21 @@ if __name__ == '__main__':
             jugadores.add(jp2)
             todos.add(jp2)
 
-        '''    
-        
-        if pag ==1 and jp.vida!=0:   
+        '''
+
+
+        if pag ==1 and jp.vida!=0 and nivel==0:   
             #pantalla.fill(BLANCO)
             pantalla.blit(ventana,(0,0))
             todos.update()
             todos.draw(pantalla)
             pygame.display.flip()
             reloj.tick(60)
+        if nivel>1:
             
-            
+            pantalla.blit(ventana2,(0,0))
+
+            pygame.display.flip()
+            #reloj.tick(60)
 
         
