@@ -414,6 +414,15 @@ if __name__ == '__main__':
     j2=Jugador_nivel2(animal2[4][7])
     todos2.add(j2)
     jugadores2.add(j2)
+
+    for i in range(8):
+        en=enemigo('img/pira.png')
+        en.rect.x=random.randrange(0,ANCHO)
+        en.rect.y=random.randrange(0,ANCHO-790)
+        #en.var_x=(-1)*random.randrange(1,10)
+        en.var_y=random.randrange(3,10)
+        enemigos2.add(en)
+        todos2.add(en)
       
     #********************************************************************
     var_x=0
