@@ -29,7 +29,7 @@ class Jugador_nivel2(pygame.sprite.Sprite):
         self.rect.x = 400
         self.rect.y = 550
         self.var_x = 0
-        self.var_y = 0
+        self.var_y = ""
         self.con = 0
         self.dir = 0
         self.vida = 3
@@ -42,7 +42,9 @@ class Jugador_nivel2(pygame.sprite.Sprite):
             self.con += 1
         else:
             self.con = 0
-            
+
+
+        '''    
         ls_choque = pygame.sprite.spritecollide(self,self.bloques,False)
         
         for b in ls_choque:
@@ -54,6 +56,10 @@ class Jugador_nivel2(pygame.sprite.Sprite):
                     self.rect.bottom=b.rect.top
                 if self.var_y<0:
                     self.rect.top=b.rect.bottom
+        '''  
+    def no_mover2(self):
+            """ Usuario no pulsa teclas """
+            self.var_y = 0 
 
 
 
@@ -227,6 +233,40 @@ class bala(pygame.sprite.Sprite):
         self.rect.x+=self.var_x
         self.rect.y+=self.var_y
 
+class bala2(pygame.sprite.Sprite):
+     
+    def __init__(self, archivo):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(archivo).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 0
+        self.var_x = 0
+        self.dirj = ""
+        self.dire = 0
+ 
+    def update(self):
+        if self.dirj == "derecha":
+            self.var_x = 10
+            self.var_x = - 10
+            self.rect.x -= self.var_x
+        if self.dirj == "izquierda":
+            self.var_x = 10
+            self.var_x = - 10
+            self.rect.x += self.var_x
+        if self.dirj == "arriba":
+            self.var_y = 10
+            self.var_y = - 10
+            self.rect.y += self.var_y
+        if self.dirj == "abajo":
+            self.var_y = 10
+            self.var_y = - 10
+            self.rect.y -= self.var_y
+        if self.dire == 1:
+            self.var_x = 10
+            self.var_x = - 10
+            self.rect.x -= self.var_x
+            
 
 class Hongos(pygame.sprite.Sprite):
     def __init__(self, archivo):
@@ -363,7 +403,7 @@ if __name__ == '__main__':
     plataformas=pygame.sprite.Group()
     asensores=pygame.sprite.Group()
     jugadores2=pygame.sprite.Group()
-    balas=pygame.sprite.Group()
+    balas2=pygame.sprite.Group()
     enemigos2=pygame.sprite.Group()
     jugadoresvida=pygame.sprite.Group()
 
@@ -461,28 +501,44 @@ if __name__ == '__main__':
                     derecha = False
 
                 if event.key== pygame.K_SPACE:
+                    be = bala2("img/kameha.png")
                     b= bala("img/kameha.png")
-                    #if jp.var_x>0:
                     b.rect.x=jp.rect.x+10
                     b.rect.y=jp.rect.y+10
                     b.dir=jp.dir
+                    be.dirj=j2.dir
                     balas.add(b)
                     todos.add(b)
 
-            
+                    be.rect.x=j2.rect.x+10
+                    be.rect.y=j2.rect.y+10
+                    balas2.add(be)
+                    todos2.add(be)
+                    
+                   
                
             if event.type == pygame.KEYUP:
 
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
                     todos.remove(b)
-                
+                    be.dirj=9
                 if event.key == pygame.K_LEFT and jp.var_x < 0:
                     jp.no_mover()
 
+                    #j2.no_mover2()
+
                 if event.key == pygame.K_RIGHT and jp.var_x > 0:
-                        jp.no_mover()    
+                        jp.no_mover()
+                           
                 
+                if event.key == pygame.K_UP and j2.var_y < 0:
+                        
+                        j2.no_mover2()
+
+                if event.key == pygame.K_DOWN and j2.var_y > 0:
+                        
+                        j2.no_mover2()
                 
         #ELIMINAR AL ENEMIGO
 
@@ -565,18 +621,20 @@ if __name__ == '__main__':
                     jugadores.remove(im)
                     todos.remove(im)            
                 '''
-
+         
         #ANIMACION DEL JUGADOR 1
         if jp.var_x==0:
             jp.image=animal[0][jp.dir]
         else:
             jp.image=animal[0+jp.con][jp.dir]
 
-
-        if j2.var_x==0:
-            j2.image=animal[0][j2.dir]
+        #ANIMACION JUGADOR SEGUNDO NIVEL  
+        if j2.var_y== 0 and j2.var_x == 0:
+            j2.image=animal2[1][j2.dir]
         else:
-            j2.image=animal[0+j2.con][j2.dir]    
+            j2.image=animal2[1+j2.con][j2.dir] 
+
+
 
 
         #ATAJO PARA PASAR MUNDO
@@ -593,10 +651,12 @@ if __name__ == '__main__':
             pos_x-=2
         if pos_x>0 and pos_x < (dim_fondo.width - ANCHO):
             ventana=fondo.subsurface(pos_x,2248,ANCHO,ALTO)
+
+
         #movimiento fondo dos
-        if jp.var_x >0 and pos_y < (dim_fondo2.height - ALTO):
+        if j2.var_y >0 and pos_y < (dim_fondo2.height - ALTO):
             pos_y+=2
-        if jp.var_x<0 :
+        if j2.var_y<0 :
             pos_y-=2
         if pos_y>0 and pos_y < (dim_fondo2.height - ALTO):
             ventana2=fondo2.subsurface(3488,pos_y,ANCHO,ALTO)    
@@ -641,6 +701,7 @@ if __name__ == '__main__':
         if nivel>1:
             
             pantalla.blit(ventana2,(0,0))
+            todos2.update()
             todos2.draw(pantalla)
             pygame.display.flip()
             #reloj.tick(60)
