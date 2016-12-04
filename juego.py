@@ -234,39 +234,42 @@ class bala(pygame.sprite.Sprite):
         self.rect.y+=self.var_y
 
 class bala2(pygame.sprite.Sprite):
-     
     def __init__(self, archivo):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(archivo).convert_alpha()
-        self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
-        self.var_x = 0
-        self.dirj = ""
-        self.dire = 0
- 
+        self.image=pygame.image.load(archivo).convert_alpha()
+        self.rect=self.image.get_rect()
+        self.rect.x=0
+        self.rect.y=0
+
+        self.var_x=10
+        self.var_y=10
+        self.dir=""
+        #self.dir2=1
+
+
     def update(self):
-        if self.dirj == "derecha":
-            self.var_x = 10
-            self.var_x = - 10
-            self.rect.x -= self.var_x
-        if self.dirj == "izquierda":
-            self.var_x = 10
-            self.var_x = - 10
-            self.rect.x += self.var_x
-        if self.dirj == "arriba":
-            self.var_y = 10
-            self.var_y = - 10
-            self.rect.y += self.var_y
-        if self.dirj == "abajo":
-            self.var_y = 10
-            self.var_y = - 10
-            self.rect.y -= self.var_y
-        if self.dire == 1:
-            self.var_x = 10
-            self.var_x = - 10
-            self.rect.x -= self.var_x
-            
+       
+        
+        if self.dir==2:
+            self.var_x+=10
+            self.var_y=0
+
+        if self.dir==1:
+            self.var_x-=10
+            self.var_y=0    
+        
+        if self.dir==3:
+            self.var_y=-10
+            self.var_x=0
+                
+
+        if self.dir==0:
+            self.var_y+=10
+            self.var_x=0
+        
+        self.rect.x+=self.var_x
+        self.rect.y+=self.var_y
+
 
 class Hongos(pygame.sprite.Sprite):
     def __init__(self, archivo):
@@ -506,12 +509,14 @@ if __name__ == '__main__':
                     b.rect.x=jp.rect.x+10
                     b.rect.y=jp.rect.y+10
                     b.dir=jp.dir
-                    be.dirj=j2.dir
+                    
                     balas.add(b)
                     todos.add(b)
 
+
                     be.rect.x=j2.rect.x+10
                     be.rect.y=j2.rect.y+10
+                    be.dir=j2.dir
                     balas2.add(be)
                     todos2.add(be)
                     
@@ -522,7 +527,7 @@ if __name__ == '__main__':
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
                     todos.remove(b)
-                    be.dirj=9
+                    be.dir=9
                 if event.key == pygame.K_LEFT and jp.var_x < 0:
                     jp.no_mover()
 
@@ -621,6 +626,12 @@ if __name__ == '__main__':
                     jugadores.remove(im)
                     todos.remove(im)            
                 '''
+        #ELIMINAR BALAS QUE SALGAN DE LA PANTALLA 
+        for eb in balas2:
+            if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO:
+                balas2.remove(eb)
+                todos2.remove(eb)
+
          
         #ANIMACION DEL JUGADOR 1
         if jp.var_x==0:
@@ -704,6 +715,5 @@ if __name__ == '__main__':
             todos2.update()
             todos2.draw(pantalla)
             pygame.display.flip()
-            #reloj.tick(60)
+            reloj.tick(60)
 
-        
