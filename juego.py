@@ -356,18 +356,24 @@ if __name__ == '__main__':
     jp2.rect.y=508
 
     
-    #todos.add(jp2)
-    #jugadores.add(jp2)
+    '''
     #DIBUJAR ENEMIGOS
     for i in range(10):
         en=enemigo('img/enemigo.png')
         en.rect.x=random.randrange(ANCHO,11000)
         en.rect.y=ALTO-90#random.randrange(ALTO-200)
-        en.var_x=-5
-        
-            
+        en.var_x=-5            
         enemigos.add(en)
         todos.add(en)
+    '''
+    for i in range(10):
+        en=enemigo('img/enemigo.png')
+        en.rect.x=random.randrange(ANCHO,5000)
+        en.rect.y=ALTO-100
+        #en.var_x=(-1)*random.randrange(1,10)
+        en.var_x=(-1)*random.randrange(3,4)
+        enemigos.add(en)
+        todos.add(en)    
     
     
     #DIBUJAR LOS BLOQUES
@@ -410,17 +416,17 @@ if __name__ == '__main__':
     enemigos2=pygame.sprite.Group()
     jugadoresvida=pygame.sprite.Group()
 
-    animal2 = Recortar('img/soldier.png', 32,32) 
+    animal2 = Recortar('img/soldiernivel2.png', 32,32) 
     j2=Jugador_nivel2(animal2[4][7])
     todos2.add(j2)
     jugadores2.add(j2)
 
-    for i in range(8):
-        en=enemigo('img/pira.png')
-        en.rect.x=random.randrange(0,ANCHO)
-        en.rect.y=random.randrange(0,ANCHO-790)
+    for i in range(30):
+        en=enemigo('img/pirana1.png')
+        en.rect.x=random.randrange(100,ANCHO-100)
+        en.rect.y=random.randrange(-3000,300)
         #en.var_x=(-1)*random.randrange(1,10)
-        en.var_y=random.randrange(3,10)
+        en.var_y=random.randrange(2,4)
         enemigos2.add(en)
         todos2.add(en)
       
@@ -474,10 +480,7 @@ if __name__ == '__main__':
                     j2.var_x=2
                     j2.var_y=0
                     j2.dir=2
-                    abajo=False
-                    arriba=False
-                    izquierda=False
-                    derecha=True
+                   
                     #b.var_x=-3
                 if event.key==pygame.K_LEFT:
                     jp.var_x=-2
