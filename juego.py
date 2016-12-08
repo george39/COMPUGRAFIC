@@ -32,7 +32,7 @@ class Jugador_nivel2(pygame.sprite.Sprite):
         self.var_y = ""
         self.con = 0
         self.dir = 0
-        self.vida = 3
+        self.vida = 1
         
     def update(self):
         self.vida
@@ -422,13 +422,13 @@ if __name__ == '__main__':
     jugadores2.add(j2)
 
     for i in range(30):
-        en=enemigo('img/pirana1.png')
-        en.rect.x=random.randrange(100,ANCHO-100)
-        en.rect.y=random.randrange(-3000,300)
+        en2=enemigo('img/pirana1.png')
+        en2.rect.x=random.randrange(100,ANCHO-100)
+        en2.rect.y=random.randrange(-3000,300)
         #en.var_x=(-1)*random.randrange(1,10)
-        en.var_y=random.randrange(2,4)
-        enemigos2.add(en)
-        todos2.add(en)
+        en2.var_y=random.randrange(2,4)
+        enemigos2.add(en2)
+        todos2.add(en2)
       
     #********************************************************************
     var_x=0
@@ -532,6 +532,7 @@ if __name__ == '__main__':
                     balas2.add(be)
                     todos2.add(be)
                     
+                    
                    
                
             if event.type == pygame.KEYUP:
@@ -615,9 +616,50 @@ if __name__ == '__main__':
                 todos.remove(jp2)
                 jugadores.add(jp)
                 todos.add(jp)
-                 
-
         
+        
+        #ELIMINAR ENEMIGOS SEGUNDO NIVEL
+        for bal2 in balas2:
+            ls_impacto=pygame.sprite.spritecollide(bal2,enemigos2,True)
+            for im in ls_impacto:
+                enemimuerots-=1
+                print "choque", enemimuerots
+                balas2.remove(bal2)
+                todos.remove(bal2)
+                
+                if im.vida==0:
+                    enemigos2.remove(im)
+                    todos2.remove(im)
+        
+        #ELIMINAR JUGADOR SEGUNDO NIVEL  
+        
+                
+        for jug2 in enemigos2:
+            ls_impacto=pygame.sprite.spritecollide(jug2,jugadores2,True)
+            for im in ls_impacto:
+                j2.vida-=1
+                print "vida j2 menos" 
+                
+                
+                if im.vida==0:
+                    enemigos2.remove(im)
+                    todos2.remove(im)
+
+       
+
+        '''
+        for bl2 in balas2:
+            ls_impacto=pygame.sprite.spritecollide(bl2,enemigos2,True)
+            for im2 in ls_impacto:
+                #enemimuerots2-=1
+                print "choque", enemimuerots
+                balas2.remove(bl2)
+                todos2.remove(bl2)
+                
+                if im2.vida==0:
+                    enemigos2.remove(im2)
+                    todos2.remove(im2)        
+        '''
                     
                             
         '''
@@ -689,16 +731,21 @@ if __name__ == '__main__':
         if pos_x>0 and pos_x==(dim_fondo.width-ANCHO):
             jp.var_y-=1
             nivel+=1
+            #j2.vida=jp.vida
             todos.remove(en)
             jugadores.remove(en)
         
         if jp.vida <1:
-                pantalla.fill(NEGRO)
-                texto=fuente.render("GAME OVER", True, BLANCO)
-                pantalla.blit(texto,(100,100))
-                imagen=pygame.image.load('img/kameha.png')
-                pantalla.blit(imagen,[120,150])
-                pygame.display.flip()
+                
+            pantalla.fill(NEGRO)
+            texto=fuente.render("GAME OVER", True, BLANCO)
+            pantalla.blit(texto,(100,100))
+            #imagen=pygame.image.load('img/kameha.png')
+            #pantalla.blit(imagen,[120,150])
+            pygame.display.flip()
+
+         
+              
         
         '''
         if jp.vida==4:
@@ -721,7 +768,18 @@ if __name__ == '__main__':
             todos.draw(pantalla)
             pygame.display.flip()
             reloj.tick(60)
-        if nivel>1:
+
+      
+        if j2.vida <1:
+                
+                pantalla.fill(NEGRO)
+                texto=fuente.render("PERDIO", True, BLANCO)
+                pantalla.blit(texto,(100,100))
+                imagen=pygame.image.load('img/kameha.png')
+                pantalla.blit(imagen,[120,150])
+                pygame.display.flip()
+
+        if nivel>1 and j2.vida>0:
             
             pantalla.blit(ventana2,(0,0))
             todos2.update()
