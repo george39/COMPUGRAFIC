@@ -402,6 +402,8 @@ if __name__ == '__main__':
     jp.lp=plataformas
     jp.la=asensores
     #********************************************************************
+
+
     #SEGUNDO NIVEL
     #********************************************************************
     fondo2=pygame.image.load('img/im3.jpeg')
@@ -429,6 +431,16 @@ if __name__ == '__main__':
         en2.var_y=random.randrange(2,4)
         enemigos2.add(en2)
         todos2.add(en2)
+
+    #ENEMIGOS VERTICALES
+    for i in range(30):
+        en3=enemigo('img/pira.png')
+        en3.rect.x=random.randrange(-3000,0)
+        en3.rect.y=random.randrange(0,ALTO)
+        #en.var_x=(-1)*random.randrange(1,10)
+        en3.var_x=random.randrange(2,4)
+        enemigos2.add(en3)
+        todos2.add(en3)     
       
     #********************************************************************
     var_x=0
