@@ -631,20 +631,41 @@ if __name__ == '__main__':
                     enemigos2.remove(im)
                     todos2.remove(im)
         
-        #ELIMINAR JUGADOR SEGUNDO NIVEL  
+        '''
+        if jp.vida==2:
+            j2.vida=2
+        '''    
+        #ELIMINAR JUGADOR SEGUNDO NIVEL
         
+        ls_choque=pygame.sprite.spritecollide(j2,enemigos2, True)
+        for elemento in ls_choque:
+            j2.vida=jp.vida
+            j2.vida-=1
+            jp.vida-=1
+            print "vida j2",j2.vida
+            print "vida jp",jp.vida
+            '''
+            if j2.vida==0:
+                jugadores2.remove(j2)
+                todos2.remove(j2)
+            '''
+        '''
                 
         for jug2 in enemigos2:
             ls_impacto=pygame.sprite.spritecollide(jug2,jugadores2,True)
-            for im in ls_impacto:
-                j2.vida-=1
-                print "vida j2 menos" 
+            for im2 in ls_impacto:
+                
+                
+                im2.vida-=1
+                
+                print "vida j2",j2.vida 
+                print "im vida ",im2.vida
                 
                 
                 if im.vida==0:
-                    enemigos2.remove(im)
-                    todos2.remove(im)
-
+                    enemigos2.remove(jug2)
+                    todos2.remove(jug2)
+            '''
        
 
         '''
@@ -729,13 +750,16 @@ if __name__ == '__main__':
         #LLAMAR SEGUNDO NIVEL
 
         if pos_x>0 and pos_x==(dim_fondo.width-ANCHO):
+
             jp.var_y-=1
             nivel+=1
             #j2.vida=jp.vida
             todos.remove(en)
             jugadores.remove(en)
+
+
         
-        if jp.vida <1:
+        if jp.vida <1 and nivel==0:
                 
             pantalla.fill(NEGRO)
             texto=fuente.render("GAME OVER", True, BLANCO)
@@ -760,7 +784,7 @@ if __name__ == '__main__':
 
         '''
 
-
+        #ACTUALIZA PANTALLA DEL PRIMER NIVEL
         if pag ==1 and jp.vida!=0 and nivel==0:   
             #pantalla.fill(BLANCO)
             pantalla.blit(ventana,(0,0))
@@ -770,7 +794,7 @@ if __name__ == '__main__':
             reloj.tick(60)
 
       
-        if j2.vida <1:
+        if j2.vida <1 :
                 
                 pantalla.fill(NEGRO)
                 texto=fuente.render("PERDIO", True, BLANCO)
