@@ -42,8 +42,24 @@ class Jugador_nivel2(pygame.sprite.Sprite):
             self.con += 1
         else:
             self.con = 0
+        
+        #LIMITE CON LOS BORDES
+        if self.rect.right>ANCHO-100:
+            self.rect.right=ANCHO-100
+            self.var_x=0
 
+        if self.rect.left<100:
+            self.rect.left=100
+            self.var_x=0
+        
+        if self.rect.bottom>ALTO-100:
+            self.rect.bottom=ALTO-100
+            
 
+        if self.rect.top<100:
+            self.rect.top=100
+                    
+           
         '''    
         ls_choque = pygame.sprite.spritecollide(self,self.bloques,False)
         
@@ -299,6 +315,29 @@ class bloque(pygame.sprite.Sprite):
     def update(self):
         self.rect.x+=self.var_x
         self.rect.y+=self.var_y
+
+
+def pausa():
+    pausado = True
+    while pausado:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    pausado = False
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+        pantalla.fill(NEGRO)
+        texto=fuente.render("PAUSADO", True, BLANCO)
+        pantalla.blit(texto,(100,100))
+        texto=fuente.render("presione P para continuar o Q para terminar", True, BLANCO)
+        pantalla.blit(texto,(100,400))
+        pygame.display.update()
+        #reloj.tick(2) 
+
 ''' 
 def dibujar_bloques(gruposprite1,gruposprite2):
     # DIBUJA LA PRIMERA FILA DE BLOQUES
@@ -422,7 +461,8 @@ if __name__ == '__main__':
     j2=Jugador_nivel2(animal2[4][7])
     todos2.add(j2)
     jugadores2.add(j2)
-
+    
+    #ENEMIGOS HORIZONTALES 
     for i in range(30):
         en2=enemigo('img/pirana1.png')
         en2.rect.x=random.randrange(100,ANCHO-100)
@@ -440,7 +480,17 @@ if __name__ == '__main__':
         #en.var_x=(-1)*random.randrange(1,10)
         en3.var_x=random.randrange(2,4)
         enemigos2.add(en3)
-        todos2.add(en3)     
+        todos2.add(en3) 
+    
+    #ENEMIGO PATRON
+    for i in range(1):
+        en4=enemigo('img/pantano.png')
+        en4.rect.x=random.randrange(100,ANCHO-100)
+        en4.rect.y=random.randrange(-30,300)
+        #en.var_x=(-1)*random.randrange(1,10)
+        en4.var_y=random.randrange(2,4)
+        enemigos2.add(en4)
+        todos2.add(en4)        
       
     #********************************************************************
     var_x=0
@@ -480,10 +530,12 @@ if __name__ == '__main__':
             
             
                 
-            
+          
 
             
             if event.type==pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    pausa()
                 if event.key==pygame.K_RIGHT:
                     jp.var_x=2
                     jp.var_y=0
@@ -715,7 +767,7 @@ if __name__ == '__main__':
                 '''
         #ELIMINAR BALAS QUE SALGAN DE LA PANTALLA 
         for eb in balas2:
-            if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO:
+            if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO or eb.rect.y<0:
                 balas2.remove(eb)
                 todos2.remove(eb)
 
