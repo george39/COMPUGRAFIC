@@ -638,15 +638,7 @@ if __name__ == '__main__':
         enemigos2.add(en3)
         todos2.add(en3) 
     '''
-    #ENEMIGO PATRON
-    for i in range(1):
-        en4=enemigopatron('img/pantano.png')
-        en4.rect.x=random.randrange(100,ANCHO-100)
-        en4.rect.y=0#random.randrange(-30,300)
-        #en.var_x=(-1)*random.randrange(1,10)
-        en4.var_y=random.randrange(2,4)
-        enemigos2.add(en4)
-        todos2.add(en4)        
+            
       
     #********************************************************************
     #********************************************************************
@@ -657,13 +649,24 @@ if __name__ == '__main__':
     ventana3=fondo3.subsurface(3488,0,ANCHO,ALTO)
 
     todos3=pygame.sprite.Group()
-    enemigo3=pygame.sprite.Group()
+    enemigos3=pygame.sprite.Group()
     jugadores3=pygame.sprite.Group()
+    balas3=pygame.sprite.Group()
 
     animal3 = Recortar('img/soldier.png', 32,32) 
     j3=jugador3(animal3[4][7])
     todos3.add(j3)
-    jugadores3.add(j3) 
+    jugadores3.add(j3)
+
+    #ENEMIGO PATRON
+    for i in range(1):
+        en4=enemigopatron('img/pantano.png')
+        en4.rect.x=random.randrange(100,ANCHO-100)
+        en4.rect.y=0#random.randrange(-30,300)
+        #en.var_x=(-1)*random.randrange(1,10)
+        en4.var_y=random.randrange(2,4)
+        enemigos3.add(en4)
+        todos3.add(en4) 
 
 
     #********************************************************************
@@ -783,19 +786,25 @@ if __name__ == '__main__':
                 if event.key== pygame.K_SPACE:
                     be = bala2("img/kameha.png")
                     b= bala("img/kameha.png")
+                    b3 = bala("img/kameha.png")
+
                     b.rect.x=jp.rect.x+10
                     b.rect.y=jp.rect.y+10
                     b.dir=jp.dir
-                    
                     balas.add(b)
                     todos.add(b)
-
 
                     be.rect.x=j2.rect.x+10
                     be.rect.y=j2.rect.y+10
                     be.dir=j2.dir
                     balas2.add(be)
                     todos2.add(be)
+
+                    b3.rect.x=j3.rect.x+10
+                    b3.rect.y=j3.rect.y+10
+                    b3.dir=j3.dir
+                    balas3.add(b3)
+                    todos3.add(b3)
                     
                     
                    
@@ -827,7 +836,7 @@ if __name__ == '__main__':
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
                     todos.remove(b)
-                    be.dir=9
+                    #b3.dir=9
                 if event.key == pygame.K_LEFT and j3.var_x < 0:
                     j3.no_mover()
 
@@ -1008,6 +1017,11 @@ if __name__ == '__main__':
             if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO or eb.rect.y<0:
                 balas2.remove(eb)
                 todos2.remove(eb)
+
+        for eb in balas3:
+            if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO or eb.rect.y<0:
+                balas3.remove(eb)
+                todos3.remove(eb)        
 
          
         #ANIMACION DEL JUGADOR 1
