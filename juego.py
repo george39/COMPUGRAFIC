@@ -7,6 +7,10 @@ NEGRO=(0,0,0)
 VERDE=(0,255,0)
 
 
+#inicio = pygame.mixer.Sound('snd/inicio.ogg')
+
+
+
 def Recortar(archivo,anc,alc):
     matriz = []
     imagen = pygame.image.load(archivo).convert_alpha()
@@ -509,6 +513,12 @@ if __name__ == '__main__':
     pygame.init()
     pantalla=pygame.display.set_mode([ANCHO,ALTO])
 
+    #SONIDOS
+    pygame.mixer.music.load('snd/inicio.ogg')
+    
+    inicio=pygame.mixer.Sound('snd/inicio.ogg')
+    disparar=pygame.mixer.Sound('snd/disparar.wav')
+   
 
     fuente=pygame.font.SysFont("Arial",36)
     '''
@@ -699,6 +709,7 @@ if __name__ == '__main__':
                 terminar=True
                 #exit()
             if event.type==pygame.MOUSEBUTTONDOWN:
+                pygame.mixer.music.play()
                 pag+=1
                 
             if pag==0:
@@ -708,8 +719,7 @@ if __name__ == '__main__':
                 imagen=pygame.image.load('img/kameha.png')
                 pantalla.blit(imagen,[120,150])
                 pygame.display.flip()
-                
-            
+                           
             
                 
           
@@ -770,7 +780,7 @@ if __name__ == '__main__':
                     abajo = False
                     izquierda = False
                     derecha = False
-
+                    
                 if event.key == pygame.K_DOWN:
                     j2.var_y=2
                     j2.var_x=0
@@ -784,6 +794,7 @@ if __name__ == '__main__':
                     derecha = False
 
                 if event.key== pygame.K_SPACE:
+                    disparar.play()
                     be = bala2("img/kameha.png")
                     b= bala("img/kameha.png")
                     b3 = bala("img/kameha.png")
@@ -807,7 +818,8 @@ if __name__ == '__main__':
                     todos3.add(b3)
                     
                     
-                   
+                    
+
                
             if event.type == pygame.KEYUP:
 
@@ -1117,7 +1129,7 @@ if __name__ == '__main__':
 
         #CUANDO EL JUGADOR PIERDE EN EL PRIMER NIVEL
         if jp.vida <1 and nivel==0:
-                
+            pygame.mixer.music.stop()    
             pantalla.fill(NEGRO)
             texto=fuente.render("GAME OVER", True, BLANCO)
             pantalla.blit(texto,(100,100))
@@ -1144,13 +1156,17 @@ if __name__ == '__main__':
         '''
 
         #ACTUALIZA PANTALLA DEL PRIMER NIVEL
-        if pag ==1 and jp.vida!=0 and nivel==0:   
+        if pag ==1 and jp.vida!=0 and nivel==0:
+            
+            #inicio.play()    
             #pantalla.fill(BLANCO)
+
             pantalla.blit(ventana,(0,0))
             todos.update()
             todos.draw(pantalla)
             pygame.display.flip()
             reloj.tick(60)
+
 
         #CUANDO EL JUGADOR PIERDE EN SEGUNDO NIVEL
         if j2.vida <1 :
