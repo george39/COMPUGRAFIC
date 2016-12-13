@@ -480,6 +480,10 @@ def pausa():
                 elif event.key == pygame.K_q:
                     pygame.quit()
                     quit()
+            if pausado ==True:
+                pygame.mixer.music.pause()
+            else:
+                pygame.mixer.music.play()           
 
         pantalla.fill(NEGRO)
         texto=fuente.render("PAUSADO", True, BLANCO)
@@ -627,7 +631,7 @@ if __name__ == '__main__':
     j2=Jugador_nivel2(animal2[4][7])
     todos2.add(j2)
     jugadores2.add(j2)
-    '''
+    
     #ENEMIGOS HORIZONTALES 
     for i in range(30):
         en2=enemigo('img/pirana1.png')
@@ -641,13 +645,13 @@ if __name__ == '__main__':
     #ENEMIGOS VERTICALES
     for i in range(30):
         en3=enemigo('img/pira.png')
-        en3.rect.x=random.randrange(-3000,0)
+        en3.rect.x=random.randrange(ANCHO,3000)
         en3.rect.y=random.randrange(0,ALTO)
         #en.var_x=(-1)*random.randrange(1,10)
-        en3.var_x=random.randrange(2,4)
+        en3.var_x=(-1)*random.randrange(2,4)
         enemigos2.add(en3)
         todos2.add(en3) 
-    '''
+    
             
       
     #********************************************************************
@@ -663,6 +667,8 @@ if __name__ == '__main__':
     jugadores3=pygame.sprite.Group()
     balas3=pygame.sprite.Group()
 
+    b3 = bala("img/kameha.png")
+
     animal3 = Recortar('img/soldier.png', 32,32) 
     j3=jugador3(animal3[4][7])
     todos3.add(j3)
@@ -672,7 +678,7 @@ if __name__ == '__main__':
     for i in range(1):
         en4=enemigopatron('img/pantano.png')
         en4.rect.x=random.randrange(100,ANCHO-100)
-        en4.rect.y=0#random.randrange(-30,300)
+        en4.rect.y=ALTO-100#random.randrange(-30,300)
         #en.var_x=(-1)*random.randrange(1,10)
         en4.var_y=random.randrange(2,4)
         enemigos3.add(en4)
@@ -709,7 +715,7 @@ if __name__ == '__main__':
                 terminar=True
                 #exit()
             if event.type==pygame.MOUSEBUTTONDOWN:
-                pygame.mixer.music.play()
+                pygame.mixer.music.play(2)
                 pag+=1
                 
             if pag==0:
@@ -728,6 +734,7 @@ if __name__ == '__main__':
             if event.type==pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     pausa()
+                    
                 if event.key==pygame.K_RIGHT:
                     jp.var_x=2
                     jp.var_y=0
@@ -950,8 +957,46 @@ if __name__ == '__main__':
                 jugadores2.remove(j2)
                 todos2.remove(j2)
             '''
+        
+        #ELIMINAR JUGADOR NIVEL 3
+        ls_choque=pygame.sprite.spritecollide(j3,enemigos3, False)
+        for elemento in ls_choque:
+            j3.vida=j2.vida
+            j3.vida-=1
+            #jp.vida-=1
+            print "vida j3",j3.vida
+            print "vida jp",j2.vida
+            if j3.vida==0:
+                jugadores3.remove(j3)
+                todos3.remove(j3)
+
+
+        #ELIMINAR ENEMIGO PATRON
+        ls_choque=pygame.sprite.spritecollide(b3,enemigos3, False)
+        for elemento in ls_choque:
+            en4.vida-=1
+            print "vida patron",en4.vida
+            #todos3.remove(b3)
+            #balas3.remove(b3)
+            if en4.vida==0:
+                jugadores3.remove(en4)
+                todos3.remove(en4)
         '''
+        for bal2 in balas3:
+            ls_impacto=pygame.sprite.spritecollide(bal2,enemigos3,True)
+            for im in ls_impacto:
+                im.vida-=1
+                #enemimuerots-=1
+                print "vida patron", im.vida
+                balas3.remove(bal2)
+                todos3.remove(bal2)
                 
+                if im.vida==0:
+                    enemigos3.remove(en4)
+                    todos3.remove(en4)
+        '''            
+
+        '''            
         for jug2 in enemigos2:
             ls_impacto=pygame.sprite.spritecollide(jug2,jugadores2,True)
             for im2 in ls_impacto:
@@ -1004,25 +1049,26 @@ if __name__ == '__main__':
                 '''
 
         #LIMITES DEL PATRON        
-        if en4.rect.left<0:
-            en4.var_y=5
-            en4.var_x=0 
-
-        if en4.rect.bottom>ALTO-200:
+        if en4.rect.left<600:
+            en4.var_y=0
+            en4.var_x=2 
+        '''
+        if en4.rect.bottom>ALTO-100:
             en4.var_x=5
             en4.var_y=0 
-
+        '''
         if en4.rect.right>ANCHO:#-en.rect.right:
-            en4.var_y=-5
-            en4.var_x=0             
-        
+            en4.var_y=0
+            en4.var_x=-2             
+        '''
         if en4.rect.top<0:
             en4.var_x=-5
             en4.var_y=0      
-            if en4.rect.left<0:
-                en4.var_y=5
-                en4.var_x=0    
-
+        
+        if en4.rect.left<600:
+            en4.var_y=5
+            en4.var_x=0    
+        ''' 
 
         #ELIMINAR BALAS QUE SALGAN DE LA PANTALLA 
         for eb in balas2:
@@ -1170,13 +1216,16 @@ if __name__ == '__main__':
 
         #CUANDO EL JUGADOR PIERDE EN SEGUNDO NIVEL
         if j2.vida <1 :
-                
+                pygame.mixer.music.stop()
                 pantalla.fill(NEGRO)
                 texto=fuente.render("PERDIO", True, BLANCO)
                 pantalla.blit(texto,(100,100))
                 imagen=pygame.image.load('img/kameha.png')
                 pantalla.blit(imagen,[120,150])
                 pygame.display.flip()
+
+        
+
         
         #ACTUALIZAR PANTALLA SEGUNDO NIVEL
         if nivel>1 and j2.vida>0 and nivel2==1:
@@ -1187,9 +1236,20 @@ if __name__ == '__main__':
             todos2.draw(pantalla)
             pygame.display.flip()
             reloj.tick(60)
+
+
+        #CUANDO EL JUGADOR PIERDE EN TERCER NIVEL
+        if j3.vida <1 :
+                pygame.mixer.music.stop()
+                pantalla.fill(NEGRO)
+                texto=fuente.render("PAILA", True, BLANCO)
+                pantalla.blit(texto,(100,100))
+                imagen=pygame.image.load('img/kameha.png')
+                pantalla.blit(imagen,[120,150])
+                pygame.display.flip()   
         
         #ACTUALIZAR PANTALLA  NIVEL 3
-        if nivel2>1 and nivel3>1:
+        if nivel2>1 and nivel3>1 and j3.vida!=0:
             #print "nivel",nivel
             pantalla.blit(ventana3,(0,0))
             todos3.update()
