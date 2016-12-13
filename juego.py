@@ -327,6 +327,7 @@ class enemigopatron(pygame.sprite.Sprite):
         self.disparar=False
         self.vida=3
         self.tiempo=random.randrange(20)
+        self.rangodisparo=100
     def update(self):
         self.rect.x+=self.var_x
         self.rect.y+=self.var_y
@@ -631,7 +632,7 @@ if __name__ == '__main__':
     j2=Jugador_nivel2(animal2[4][7])
     todos2.add(j2)
     jugadores2.add(j2)
-    
+    '''
     #ENEMIGOS HORIZONTALES 
     for i in range(30):
         en2=enemigo('img/pirana1.png')
@@ -652,7 +653,7 @@ if __name__ == '__main__':
         enemigos2.add(en3)
         todos2.add(en3) 
     
-            
+    '''        
       
     #********************************************************************
     #********************************************************************
@@ -668,6 +669,7 @@ if __name__ == '__main__':
     balas3=pygame.sprite.Group()
 
     b3 = bala("img/kameha.png")
+    be=bala("img/kameha.png")
 
     animal3 = Recortar('img/soldier.png', 32,32) 
     j3=jugador3(animal3[4][7])
@@ -970,6 +972,17 @@ if __name__ == '__main__':
                 jugadores3.remove(j3)
                 todos3.remove(j3)
 
+        ls_choque=pygame.sprite.spritecollide(be,jugadores3, True)
+        for elemento in ls_choque:
+            j3.vida=j2.vida
+            j3.vida-=1
+            #jp.vida-=1
+            print "vida j3",j3.vida
+            print "vida jp",j2.vida
+            if j3.vida==0:
+                jugadores3.remove(j3)
+                todos3.remove(j3)        
+
 
         #ELIMINAR ENEMIGO PATRON
         ls_choque=pygame.sprite.spritecollide(b3,enemigos3, False)
@@ -1047,19 +1060,40 @@ if __name__ == '__main__':
                     jugadores.remove(im)
                     todos.remove(im)            
                 '''
+        #BALAS DEL PATRON
+        for en in enemigos3:
+            if en4.disparar and (random.randrange(0,10000)<en4.rangodisparo):
+               
+               be=bala("img/fuego.png")
+               be.dir=1
+               be.rect.x=en.rect.x+10
+               be.rect.y=en.rect.y+10
+               be.var_x=1#(-1)*random.randrange(2,4)
+               balas3.add(be)
+               todos3.add(be)
+               en4.disparar=False
 
-        #LIMITES DEL PATRON        
-        if en4.rect.left<600:
+
+        #LIMITES DEL PATRON
+        
+        if en4.rect.left<400:
             en4.var_y=0
-            en4.var_x=2 
-        '''
-        if en4.rect.bottom>ALTO-100:
-            en4.var_x=5
-            en4.var_y=0 
-        '''
+            en4.var_x=2
+        
         if en4.rect.right>ANCHO:#-en.rect.right:
             en4.var_y=0
-            en4.var_x=-2             
+            en4.var_x=-2
+
+        if en4.rect.bottom>ALTO:
+            en4.var_y=0
+            en4.var_x=-2
+        
+
+        if en4.rect.left<0 or en4.rect.bottom>ALTO:
+            en4.var_y=0
+            en4.var_x=2     
+            
+
         '''
         if en4.rect.top<0:
             en4.var_x=-5
