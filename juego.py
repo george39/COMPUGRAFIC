@@ -523,6 +523,7 @@ if __name__ == '__main__':
     
     inicio=pygame.mixer.Sound('snd/inicio.ogg')
     disparar=pygame.mixer.Sound('snd/disparar.wav')
+    cojervida=pygame.mixer.Sound('snd/vida.wav')
    
 
     fuente=pygame.font.SysFont("Arial",36)
@@ -576,6 +577,7 @@ if __name__ == '__main__':
         enemigos.add(en)
         todos.add(en)
     '''
+    #ENEMIGOS EN X
     for i in range(10):
         en=enemigo('img/enemigo.png')
         en.rect.x=random.randrange(ANCHO,5000)
@@ -583,7 +585,23 @@ if __name__ == '__main__':
         #en.var_x=(-1)*random.randrange(1,10)
         en.var_x=(-1)*random.randrange(3,4)
         enemigos.add(en)
-        todos.add(en)    
+        todos.add(en)
+    '''
+    #ENEMIGOS EN Y
+    for i in range(10):
+        en1=enemigo('img/pirana1.png')
+        en1.rect.x=ANCHO-100#random.randrange(600,ANCHO-150)
+        en1.rect.y=0#random.randrange(-3000,300)
+        #en.var_x=(-1)*random.randrange(1,10)
+        en1.var_y=random.randrange(2,4)
+        enemigos.add(en1)
+        todos.add(en1)
+        if en1.rect.bottom==ALTO-100 and en1.var_y>0:
+            en1.var_x-=3#(-1)*random.randrange(2,4)
+            en1.var_y=0
+    '''
+        
+                     
     
     
     #DIBUJAR LOS BLOQUES
@@ -616,7 +634,7 @@ if __name__ == '__main__':
 
     #SEGUNDO NIVEL
     #********************************************************************
-    fondo2=pygame.image.load('img/im3.jpeg')
+    fondo2=pygame.image.load('img/nivel2.jpg')
     dim_fondo2=fondo2.get_rect()
     ventana2=fondo2.subsurface(3488,0,ANCHO,ALTO)
 
@@ -632,11 +650,11 @@ if __name__ == '__main__':
     j2=Jugador_nivel2(animal2[4][7])
     todos2.add(j2)
     jugadores2.add(j2)
-    '''
+    
     #ENEMIGOS HORIZONTALES 
     for i in range(30):
         en2=enemigo('img/pirana1.png')
-        en2.rect.x=random.randrange(100,ANCHO-100)
+        en2.rect.x=random.randrange(100,ANCHO-150)
         en2.rect.y=random.randrange(-3000,300)
         #en.var_x=(-1)*random.randrange(1,10)
         en2.var_y=random.randrange(2,4)
@@ -646,20 +664,20 @@ if __name__ == '__main__':
     #ENEMIGOS VERTICALES
     for i in range(30):
         en3=enemigo('img/pira.png')
-        en3.rect.x=random.randrange(ANCHO,3000)
-        en3.rect.y=random.randrange(0,ALTO)
+        en3.rect.x=random.randrange(100,ANCHO-150)
+        en3.rect.y=random.randrange(900,3000)
         #en.var_x=(-1)*random.randrange(1,10)
-        en3.var_x=(-1)*random.randrange(2,4)
+        en3.var_y=(-1)*random.randrange(2,4)
         enemigos2.add(en3)
         todos2.add(en3) 
     
-    '''        
+           
       
     #********************************************************************
     #********************************************************************
     #          NIVEL 3
     #********************************************************************
-    fondo3=pygame.image.load('img/im3.jpeg')
+    fondo3=pygame.image.load('img/nivel3.jpg')
     dim_fondo3=fondo3.get_rect()
     ventana3=fondo3.subsurface(3488,0,ANCHO,ALTO)
 
@@ -679,10 +697,10 @@ if __name__ == '__main__':
     #ENEMIGO PATRON
     for i in range(1):
         en4=enemigopatron('img/pantano.png')
-        en4.rect.x=random.randrange(100,ANCHO-100)
+        en4.rect.x=ANCHO#random.randrange(100,ANCHO-100)
         en4.rect.y=ALTO-100#random.randrange(-30,300)
         #en.var_x=(-1)*random.randrange(1,10)
-        en4.var_y=random.randrange(2,4)
+        #en4.var_y=random.randrange(2,4)
         enemigos3.add(en4)
         todos3.add(en4) 
 
@@ -699,6 +717,8 @@ if __name__ == '__main__':
     nivel2=1
     nivel3=0
     enemimuerots = 10
+
+    pasar=0
 
     
     abajo=False
@@ -721,11 +741,25 @@ if __name__ == '__main__':
                 pag+=1
                 
             if pag==0:
+
                 pantalla.fill(NEGRO)
-                texto=fuente.render("INICIO", True, BLANCO)
-                pantalla.blit(texto,(100,100))
-                imagen=pygame.image.load('img/kameha.png')
-                pantalla.blit(imagen,[120,150])
+                texto=fuente.render("BIENVENIDOS A SEAR MONSTERS", True, BLANCO)
+                pantalla.blit(texto,(100,50))
+                texto=fuente.render("con la flecha derecha el jugador avanza",True,BLANCO)
+                pantalla.blit(texto,(80,150)) 
+                texto=fuente.render("con la flecha izquierda el jugador retrocede",True,BLANCO)
+                pantalla.blit(texto,(80,200))
+                texto=fuente.render("con la flecha arriba el jugador salta",True,BLANCO)
+                pantalla.blit(texto,(80,250))
+                texto=fuente.render("con la letra P se pausa el juego",True,BLANCO)
+                pantalla.blit(texto,(80,300))
+                texto=fuente.render("con la letra Q sale del juego",True,BLANCO)
+                pantalla.blit(texto,(80,350))
+                texto=fuente.render("DE CLIC PARA INICIAR",True,BLANCO)
+                pantalla.blit(texto,(80,500))
+                
+                imagen=pygame.image.load('img/pirana.png')
+                pantalla.blit(imagen,[450,300])
                 pygame.display.flip()
                            
             
@@ -784,12 +818,12 @@ if __name__ == '__main__':
                     j3.var_y=-8
                     j3.rect.y += -2
                     j3.var_x=0
-                        
+                    '''    
                     arriba = True
                     abajo = False
                     izquierda = False
                     derecha = False
-                    
+                    '''
                 if event.key == pygame.K_DOWN:
                     j2.var_y=2
                     j2.var_x=0
@@ -804,9 +838,9 @@ if __name__ == '__main__':
 
                 if event.key== pygame.K_SPACE:
                     disparar.play()
-                    be = bala2("img/kameha.png")
-                    b= bala("img/kameha.png")
-                    b3 = bala("img/kameha.png")
+                    be = bala2("img/kameha2.png")
+                    b= bala("img/kameha2.png")
+                    b3 = bala("img/kameha2.png")
 
                     b.rect.x=jp.rect.x+10
                     b.rect.y=jp.rect.y+10
@@ -834,7 +868,7 @@ if __name__ == '__main__':
 
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
-                    todos.remove(b)
+                    #todos.remove(b)
                     be.dir=9
                 if event.key == pygame.K_LEFT and jp.var_x < 0:
                     jp.no_mover()
@@ -856,8 +890,8 @@ if __name__ == '__main__':
                 #no mover 3
                 if event.key==pygame.K_SPACE:
                     #balas.remove(b)
-                    todos.remove(b)
-                    #b3.dir=9
+                    #todos.remove(b)
+                    b3.dir=9
                 if event.key == pygame.K_LEFT and j3.var_x < 0:
                     j3.no_mover()
 
@@ -903,6 +937,7 @@ if __name__ == '__main__':
         ls_choque=pygame.sprite.spritecollide(jp,hongos, True)
         for elemento in ls_choque:
             jp.vida+=1
+            cojervida.play()
             if jp.vida==2:
                 jugadores.remove(jp)
                 todos.remove(jp)
@@ -972,7 +1007,7 @@ if __name__ == '__main__':
                 jugadores3.remove(j3)
                 todos3.remove(j3)
 
-        ls_choque=pygame.sprite.spritecollide(be,jugadores3, True)
+        ls_choque=pygame.sprite.spritecollide(be,jugadores3, False)
         for elemento in ls_choque:
             j3.vida=j2.vida
             j3.vida-=1
@@ -985,6 +1020,17 @@ if __name__ == '__main__':
 
 
         #ELIMINAR ENEMIGO PATRON
+        for bal2 in balas3:
+            ls_impacto=pygame.sprite.spritecollide(bal2,enemigos3,False)
+            for im in ls_impacto:
+                im.vida-=1
+                print en4.vida
+                
+                
+                if im.vida==0:
+                    enemigos3.remove(im)
+                    todos3.remove(im)
+        '''
         ls_choque=pygame.sprite.spritecollide(b3,enemigos3, False)
         for elemento in ls_choque:
             en4.vida-=1
@@ -994,6 +1040,7 @@ if __name__ == '__main__':
             if en4.vida==0:
                 jugadores3.remove(en4)
                 todos3.remove(en4)
+        '''        
         '''
         for bal2 in balas3:
             ls_impacto=pygame.sprite.spritecollide(bal2,enemigos3,True)
@@ -1060,23 +1107,25 @@ if __name__ == '__main__':
                     jugadores.remove(im)
                     todos.remove(im)            
                 '''
+        '''        
         #BALAS DEL PATRON
         for en in enemigos3:
-            if en4.disparar and (random.randrange(0,10000)<en4.rangodisparo):
+            if en4.disparar and (random.randrange(0,50000)<en4.rangodisparo):
                
                be=bala("img/fuego.png")
                be.dir=1
                be.rect.x=en.rect.x+10
                be.rect.y=en.rect.y+10
-               be.var_x=1#(-1)*random.randrange(2,4)
+               #be.var_x=1#(-1)*random.randrange(2,4)
                balas3.add(be)
                todos3.add(be)
                en4.disparar=False
+        '''       
 
 
         #LIMITES DEL PATRON
         
-        if en4.rect.left<400:
+        if en4.rect.left<0:
             en4.var_y=0
             en4.var_x=2
         
@@ -1103,7 +1152,11 @@ if __name__ == '__main__':
             en4.var_y=5
             en4.var_x=0    
         ''' 
-
+        '''
+        if en1.rect.bottom==ALTO-100 and en1.var_y>0:
+            en1.var_x-=3
+            en1.var_y=0
+        '''
         #ELIMINAR BALAS QUE SALGAN DE LA PANTALLA 
         for eb in balas2:
             if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO or eb.rect.y<0:
@@ -1113,7 +1166,12 @@ if __name__ == '__main__':
         for eb in balas3:
             if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO or eb.rect.y<0:
                 balas3.remove(eb)
-                todos3.remove(eb)        
+                todos3.remove(eb) 
+
+        for eb in balas:
+            if eb.rect.x < 0 or eb.rect.x > ANCHO or eb.rect.y > ALTO or eb.rect.y<0:
+                balas.remove(eb)
+                todos.remove(eb)               
 
          
         #ANIMACION DEL JUGADOR 1
@@ -1189,8 +1247,7 @@ if __name__ == '__main__':
             nivel+=1
             nivel2=1
             
-            print "nivel 2",nivel2
-            print "nivel",nivel
+           
             #j2.vida=jp.vida
             todos.remove(en)
             jugadores.remove(en)
@@ -1252,7 +1309,7 @@ if __name__ == '__main__':
         if j2.vida <1 :
                 pygame.mixer.music.stop()
                 pantalla.fill(NEGRO)
-                texto=fuente.render("PERDIO", True, BLANCO)
+                texto=fuente.render("GAME OVER", True, BLANCO)
                 pantalla.blit(texto,(100,100))
                 imagen=pygame.image.load('img/kameha.png')
                 pantalla.blit(imagen,[120,150])
@@ -1264,7 +1321,7 @@ if __name__ == '__main__':
         #ACTUALIZAR PANTALLA SEGUNDO NIVEL
         if nivel>1 and j2.vida>0 and nivel2==1:
             nivel3+=1
-            print "suma nivel",nivel
+            #print "suma nivel",nivel
             pantalla.blit(ventana2,(0,0))
             todos2.update()
             todos2.draw(pantalla)
@@ -1276,18 +1333,29 @@ if __name__ == '__main__':
         if j3.vida <1 :
                 pygame.mixer.music.stop()
                 pantalla.fill(NEGRO)
-                texto=fuente.render("PAILA", True, BLANCO)
+                texto=fuente.render("GAME OVER", True, BLANCO)
                 pantalla.blit(texto,(100,100))
                 imagen=pygame.image.load('img/kameha.png')
                 pantalla.blit(imagen,[120,150])
                 pygame.display.flip()   
         
         #ACTUALIZAR PANTALLA  NIVEL 3
-        if nivel2>1 and nivel3>1 and j3.vida!=0:
+        if nivel2>1 and nivel3>1 and j3.vida!=0 and en4.vida>0:
             #print "nivel",nivel
             pantalla.blit(ventana3,(0,0))
             todos3.update()
             todos3.draw(pantalla)
             pygame.display.flip()
-            reloj.tick(60)    
+            reloj.tick(60)
+
+        if en4.vida <1  :
+            pasar+=1
+            if pasar>1:
+                pygame.mixer.music.stop()
+                pantalla.fill(NEGRO)
+                texto=fuente.render("FELICITACIONES", True, BLANCO)
+                pantalla.blit(texto,(100,100))
+                imagen=pygame.image.load('img/kameha.png')
+                pantalla.blit(imagen,[120,150])
+                pygame.display.flip()        
 
